@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name"> Auth Firebase</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_name">Nombre</string>
+    <string name="hint_SignUp">Registrar</string>
+    <string name="hint_LogIn">Acceder</string>
+    <string name="hint_provider">Proveedor</string>
+    <string name="hint_SignOut">Cerrar sesión</string>
+    <string name="title_Auth">Autentificacion ㋡</string>
+    <string name="title_error">Error</string>
+    <string name="message_error">Se a producido un error autenticando al usuario</string>
+    <string name="accept">Aceptar</string>
+    <string name="title_Home">Inicio</string>
+    <string name="key_email">email</string>
+    <string name="key_provider">provider</string>
+    <string name="hint_id">Id</string>
+    <string name="hint_EmailVerified">Email verificado</string>
+    <string name="hint_update">Actualizar</string>
+    <string name="hint_urlPhoto">Url de la foto</string>
+    <string name="helper_required">Requerido</string>
+    <string name="edit_user_message_valid">Revise los campos requeridos</string>
+    <string name="hint_phone">Telefono</string>
+    <string name="hint_password">Nueva Contraseña</string>
+    <string name="edit_user_message_error_pass">Error al actualizar la contraseña</string>
+</resources>

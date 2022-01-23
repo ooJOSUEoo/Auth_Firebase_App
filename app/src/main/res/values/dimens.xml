@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="commond_padding_default">16dp</dimen>
+    <dimen name="size_ET_urlPhoto">100dp</dimen>
+    <dimen name="size_imgPhoto_w_h">190dp</dimen>
+</resources>
