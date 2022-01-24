@@ -19,22 +19,24 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import com.josueproyects.authfirebase.databinding.ActivityMainBinding
+import java.lang.NullPointerException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var user: FirebaseAuth
+    private var user: FirebaseUser? = null
     private lateinit var profileUpdates: UserProfileChangeRequest
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()){
         val response = IdpResponse.fromResultIntent(it.data)
 
         if (it.resultCode == RESULT_OK){ //ver si existe un usuario Autenticado
-            val user = FirebaseAuth.getInstance().currentUser //variable para el user Auth
+            /*val user = FirebaseAuth.getInstance().currentUser*/ //variable para el user Auth
             if (user != null){
                 verificarEmail()
                 Toast.makeText(this,"Bienvenido.",Toast.LENGTH_SHORT).show()
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater ) //inicializar binding
         setContentView(binding.root)
-        user = Firebase.auth
+        user = FirebaseAuth.getInstance().currentUser
 
         confAuth()
         listener()
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     private fun confAuth() {
         title = getString(R.string.title_Auth)
 
-        val user = FirebaseAuth.getInstance().currentUser
+         user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             /*val email = FirebaseAuth.getInstance().currentUser?.email.toString()
             val provider = ProviderType.BASIC
@@ -135,7 +137,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun verificarEmail(){
-        user.currentUser?.sendEmailVerification()!!
+        user?.sendEmailVerification()!!
             .addOnSuccessListener {  }
             .addOnFailureListener {  }
     }
@@ -188,15 +190,15 @@ class MainActivity : AppCompatActivity() {
 
 
         with(binding){
-            etEmail.setText(user.currentUser!!.email.toString())
-            etName.setText(user.currentUser!!.displayName)
-            etId.setText(user.currentUser!!.uid)
-            etUrlPhoto.setText(user.currentUser!!.photoUrl.toString())
-            if (user.currentUser!!.photoUrl == null) etUrlPhoto.setText("")
+            etEmail.setText(user!!.email.toString())
+            etName.setText(user!!.displayName)
+            etId.setText(user!!.uid)
+            etUrlPhoto.setText(user!!.photoUrl.toString())
+            if (user!!.photoUrl == null) etUrlPhoto.setText("")
             //etPhone.setText(user.currentUser!!.phoneNumber.toString())
-            cbEmailVerified.isChecked = user.currentUser!!.isEmailVerified
+            cbEmailVerified.isChecked = user!!.isEmailVerified
             containerMain.visibility = View.VISIBLE
-            loadImage(user.currentUser!!.photoUrl.toString())
+            loadImage(user!!.photoUrl.toString())
         }
     }
 
@@ -214,17 +216,25 @@ class MainActivity : AppCompatActivity() {
                         }
 
 
-                    user.currentUser!!.updateProfile(profileUpdates)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful){
-                                /*profileCount = 1
-                                Toast.makeText(this@MainActivity,profileCount,Toast.LENGTH_SHORT).show()*/
-                                snackbar("Usuario actualizado")
-                            }else{
-                                snackbar("Error al actualizar los datos del perfil")
+                    try {
+                        user!!.updateProfile(profileUpdates)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful){
+                                    /*profileCount = 1
+                                    Toast.makeText(this@MainActivity,profileCount,Toast.LENGTH_SHORT).show()*/
+                                    Toast.makeText(this@MainActivity,
+                                        getString(R.string.edit_user_message_success),Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Toast.makeText(this@MainActivity,
+                                        getString(R.string.edit_user_message_error),Toast.LENGTH_LONG).
+                                    show()
+                                }
                             }
-
-                        }
+                    }catch (e: NullPointerException) {
+                        Toast.makeText(this@MainActivity,
+                            getString(R.string.edit_user_message_error),Toast.LENGTH_LONG).
+                        show()
+                    }
                     /*//actualizar email
                     user.currentUser!!.updateEmail(binding.etEmail.text.toString())
                         .addOnCompleteListener { task ->
@@ -273,12 +283,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deleteAccount(){
-        user.currentUser!!.delete()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    confAuth()
-                }else snackbar("Error al eliminar la cuenta")
-            }
+        try {
+            user!!.delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        confAuth()
+                    }else Toast.makeText(this,
+                        getString(R.string.user_message_error_delete_account),Toast.LENGTH_LONG)
+                        .show()
+                }
+        }catch (e: NullPointerException){
+            Toast.makeText(this,
+                getString(R.string.user_message_error_delete_account),Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     private fun loadImage(url: String){
@@ -302,36 +320,5 @@ class MainActivity : AppCompatActivity() {
         return isValid
     }
 
-    /*fun successTask(task: Boolean, number: Int): Boolean {
-        var returnVal = false
-        if (number == 1){
-            if (task) {
-                snackbar(R.string.edit_user_message_success.toString())
-                returnVal = true
-            }else{
-                snackbar(R.string.edit_user_message_error.toString())
-                returnVal = false
-            }
-        }else if (number == 3){
-            if (task) {
-                Snackbar.make(binding.root,
-                    R.string.edit_user_message_success,
-                    Snackbar.LENGTH_SHORT).show()
-                returnVal = true
-            }else{
-                Snackbar.make(binding.root,
-                    R.string.edit_user_message_error,
-                    Snackbar.LENGTH_SHORT).show()
-                returnVal = false
-            }
-        }
-        return  returnVal
-    }*/
-
-    private fun snackbar(message: String){
-        Snackbar.make(binding.root,
-            message,
-            Snackbar.LENGTH_SHORT).show()
-    }
 
 }

@@ -22,4 +22,7 @@
     <string name="hint_phone">Telefono</string>
     <string name="hint_password">Nueva Contraseña</string>
     <string name="edit_user_message_error_pass">Error al actualizar la contraseña</string>
+    <string name="user_message_error_delete_account">Error al eliminar la cuenta intente mas tarde</string>
+    <string name="edit_user_message_success">Usuario actualizado</string>
+    <string name="edit_user_message_error">Error al actualizar los datos del perfil, intente mas tarde</string>
 </resources>

@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Josue/AndroidStudioProjects/AuthFirebase/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2712820512820513" />
+        <entry key="..\:/Users/Josue/AndroidStudioProjects/AuthFirebase/app/src/main/res/drawable/splash_creen.xml" value="0.2712820512820513" />
         <entry key="..\:/Users/Josue/AndroidStudioProjects/AuthFirebase/app/src/main/res/layout/activity_home.xml" value="0.259375" />
         <entry key="..\:/Users/Josue/AndroidStudioProjects/AuthFirebase/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Josue/AndroidStudioProjects/AuthFirebase/app/src/main/res/menu/item_menu.xml" value="0.259375" />
